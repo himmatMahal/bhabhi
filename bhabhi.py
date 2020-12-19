@@ -3,7 +3,7 @@ from random import randint
 import math
 
 from cards import Hand, Deck
-from players import HumanPlayer, MonkeyCPU
+from players import HumanPlayer, MonkeyCPU, HumanLikeCPUI, HumanLikeCPUII
 
 ACE_OF_SPADES = ('Spades', 'A', 12)
 
@@ -17,11 +17,7 @@ def print_status(just_played, table_cards):
     table_cards.show_cards()
     print("----------------------------------------")
 
-def main_loop(players, printing_on, show_cpu):
-
-    show_every_round = printing_on
-    show_cpu_cards = show_cpu
-    # set this variable to true to print status every round
+def main_loop(players, show_every_round, show_cpu_cards):
 
     garbage = Hand([])
     table_cards = Hand([])
@@ -77,14 +73,13 @@ def main_loop(players, printing_on, show_cpu):
             current = players[(starter + i) % num_live_players]
             if show_cpu_cards:
                 if not isinstance(current, HumanPlayer):
-                    current.hand.show_cards()            
+                    current.hand.show_cards()
             table_cards.pick_up_card( current.bhabhi_move(table_cards) )
 
             # checking game status
             if not (i==0):
                 if table_cards.top_card_is_diffsuit():
                     round_end_early = True
-
                 elif table_cards.top_card_is_highest():
                     # checking if player who just played threw the highest card
                     next_starting_player = current
@@ -137,13 +132,13 @@ def main_loop(players, printing_on, show_cpu):
 def main():
     ''' setting up 4 players and player info '''
     piles = Deck().deal( 4 )
-    p1 = HumanPlayer( 'p1', piles[0] )
-    p2 = MonkeyCPU( 'p2', piles[1] )
-    p3 = MonkeyCPU( 'p3', piles[2] )
-    p4 = MonkeyCPU( 'p4', piles[3] )
+    p1 = HumanLikeCPUI( '1-HumanLikeCPUI', piles[0] )
+    p2 = HumanLikeCPUII( '2-HumanLikeCPUII', piles[1] )
+    p3 = MonkeyCPU( '3-MonkeyCPU', piles[2] )
+    p4 = MonkeyCPU( '4-MonkeyCPU', piles[3] )
 
     players = [p1, p2, p3, p4]
-    main_loop(players, printing_on=True, show_cpu=True)
+    main_loop(players, show_every_round=True, show_cpu_cards=True)
 
 if __name__ == '__main__':
     main()
