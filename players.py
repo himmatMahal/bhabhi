@@ -28,6 +28,11 @@ class HumanPlayer(Player):
     def bhabhi_move(self, table_cards):
         selection = 0
 
+        print("Would you like to see your cards? (y/n)")
+        show_player_cards = input()
+        if ( show_player_cards.lower() == 'y' ):
+            self.hand.show_cards()
+
         if table_cards.get_card_count() > 0:
             table_suit = table_cards.get_bottom_suit()
             if self.hand.has_suit( table_suit ):
@@ -37,17 +42,17 @@ class HumanPlayer(Player):
                     print("(Suited) Enter the index of the"
                     + " card you would like to play: ")
                     selection = int(input())
-                    valid_move = get_card_suit(selection) == table_suit
+                    valid_move = self.hand.get_card_suit(selection)==table_suit
             else:
                 # Case 2 - player does not have live suit
-                valid_moves = list(range(1, self.hand.get_card_count()))
+                valid_moves = list(range(1, (self.hand.get_card_count()+1)))
                 while not (selection in valid_moves):
                     print("(Any) Enter the index of the"
                     + " card you would like to play: ")
                     selection = int(input())
         else:
             # Case 3 - player is starting round
-            valid_moves = list(range(1, self.hand.get_card_count()))
+            valid_moves = list(range(1, (self.hand.get_card_count()+1)))
             while not (selection in valid_moves):
                 print("(Start of Round) Enter the index of the"
                 + " card you would like to play: ")
@@ -59,6 +64,7 @@ class MonkeyCPU(Player):
     ''' CPU player which selects cards at random to play '''
     def bhabhi_move(self, table_cards):
 
+        # note: randint includes end points, range() does not
         if table_cards.get_card_count() > 0:
             table_suit = table_cards.get_bottom_suit()
 

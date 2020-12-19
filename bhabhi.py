@@ -17,9 +17,10 @@ def print_status(just_played, table_cards):
     table_cards.show_cards()
     print("----------------------------------------")
 
-def main_loop(players, printing_on):
+def main_loop(players, printing_on, show_cpu):
 
     show_every_round = printing_on
+    show_cpu_cards = show_cpu
     # set this variable to true to print status every round
 
     garbage = Hand([])
@@ -74,6 +75,9 @@ def main_loop(players, printing_on):
 
             # player takes turn
             current = players[(starter + i) % num_live_players]
+            if show_cpu_cards:
+                if not isinstance(current, HumanPlayer):
+                    current.hand.show_cards()            
             table_cards.pick_up_card( current.bhabhi_move(table_cards) )
 
             # checking game status
@@ -105,7 +109,6 @@ def main_loop(players, printing_on):
         # case where next_starting_player must pick from garbage since
         # they start the next round
         if next_starting_player.hand.get_card_count() < 1:
-
             if show_every_round:
                 print(str(next_starting_player.name)+" picks a card from"
                       +" the garbage since they threw highest but are out!")
@@ -127,19 +130,20 @@ def main_loop(players, printing_on):
 
         # setting up starting player for next round
         starter = players.index( next_starting_player )
+    # Game over once all but one players are eliminated
 
     print( players[0].name + " is the Bhabhi!" )
 
 def main():
     ''' setting up 4 players and player info '''
     piles = Deck().deal( 4 )
-    p1 = MonkeyCPU( 'p1', piles[0] )
+    p1 = HumanPlayer( 'p1', piles[0] )
     p2 = MonkeyCPU( 'p2', piles[1] )
     p3 = MonkeyCPU( 'p3', piles[2] )
     p4 = MonkeyCPU( 'p4', piles[3] )
 
     players = [p1, p2, p3, p4]
-    main_loop(players, printing_on=True)
+    main_loop(players, printing_on=True, show_cpu=True)
 
 if __name__ == '__main__':
     main()
