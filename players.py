@@ -116,40 +116,30 @@ class HumanLikeCPUII(Player):
           late game, cpu tries to play lower than the table cards while
           getting rid of high cards
     '''
-
-    # TODO: use pop_card with literal card instead of index to avoid
-    #       using .index() method
-
     def select_lowest_occuring_card(self):
         suits = [card[0] for card in self.hand.cards]
         # make list of possible suits
         possibilities = list(dict.fromkeys(suits))
-
         # make list of count of each suit, this list matches 1-1 with the
         # list of possible suits
         suit_counts = []
         for possible_suit in possibilities:
             suit_counts.append(suits.count(possible_suit))
-
         # index the suit with the lowest occurence
         suit_to_play = possibilities[ suit_counts.index(min(suit_counts)) ]
-
         # make a list of possible cards to play, then sort by value
         possible_cards = [ card for card in self.hand.cards
                            if card[0]==suit_to_play ]
         possible_cards.sort(key=lambda card:card[2])
-
         # .sort() sorts in ascending order, and we want the highest value card
         return self.hand.pop_card(possible_cards[-1])
 
     def select_highest_low_value_suited(self, table_suit, table_cards):
         # play highest possible card less than any table cards
         max_live = max([card[2] for card in table_cards.cards])
-
         # list of options: playable cards that have lower rand than max card
         options = [ card for card in self.hand.cards
                     if (card[2]<max_live and card[0]==table_suit) ]
-
         # if these options exist, sort them and play the highest
         if options:
             options.sort(key=lambda card:card[2])
