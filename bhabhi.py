@@ -58,6 +58,7 @@ def main_loop(players, show_every_round, show_cpu_cards):
 
     # central loop for game
     j=1
+    winners = []
     while num_live_players>1:
         if show_every_round:
             print(f"\n<---Next Round--->\nRound #{j}")
@@ -73,7 +74,7 @@ def main_loop(players, show_every_round, show_cpu_cards):
             current = players[(starter + i) % num_live_players]
             if show_cpu_cards:
                 if not isinstance(current, HumanPlayer):
-                    current.hand.show_cards()
+                    current.show_cards()
             table_cards.pick_up_card( current.bhabhi_move(table_cards) )
 
             # checking game status
@@ -94,7 +95,7 @@ def main_loop(players, show_every_round, show_cpu_cards):
             if show_every_round:
                 print(f"{next_starting_player.name} picks up the table cards!")
 
-            next_starting_player.hand.pick_up_cards(
+            next_starting_player.pick_up_cards(
                 table_cards.pop_all_cards()
             )
 
@@ -109,11 +110,18 @@ def main_loop(players, show_every_round, show_cpu_cards):
                       +" the garbage since they threw highest but are out!")
 
             garbage.shuffle_cards()
-            next_starting_player.hand.pick_up_card( garbage.pop_card(1) )
+            next_starting_player.pick_up_card( garbage.pop_card(1) )
 
-        # removing winners:
-        next_round_players = [ player for player in players
-                               if player.hand.get_card_count() >= 1 ]
+        # removing winners, and updating qtable if necessary:
+        next_round_players = []
+        for player in players:
+            if isinstance(player, QLearner):
+                player.update_qtable()
+            if player.hand.get_card_count() >= 1:
+                next_round_players.append(player)
+            else:
+                winners.append(player)
+
         if show_every_round:
             print("End of Round status: ")
             for player in players:
@@ -126,8 +134,11 @@ def main_loop(players, show_every_round, show_cpu_cards):
         # setting up starting player for next round
         starter = players.index( next_starting_player )
     # Game over once all but one players are eliminated
+    for player in winners:
+        print( "#"+ str(winners.index(player)+1) + " - " + player.name )
 
     print( players[0].name + " is the Bhabhi!" )
+
 
 def main():
     ''' setting up 4 players and player info '''
@@ -138,7 +149,7 @@ def main():
     p4 = MonkeyCPU( '4-MonkeyCPU', piles[3] )
 
     players = [p1, p2, p3, p4]
-    main_loop(players, show_every_round=True, show_cpu_cards=True)
+    main_loop(players, show_every_round=False, show_cpu_cards=False)
 
 if __name__ == '__main__':
     main()

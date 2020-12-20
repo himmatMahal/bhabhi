@@ -14,6 +14,12 @@ class Player(ABC):
         print(str(self.name))
         self.hand.show_cards()
 
+    def pick_up_cards(self, c):
+        self.hand.pick_up_cards(c)
+
+    def pick_up_card(self, c):
+        self.hand.pick_up_card(c)
+
     def bhabhi_move(self, table_cards):
         ''' abstract method. table_cards is a Hand
             containing cards on the table,
