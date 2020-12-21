@@ -9,10 +9,9 @@ class QLearner(Player):
     STATE_COUNT = 81
     ACTION_COUNT = 2 # 0- play low card...  1- play high card
     QTABLE_FILE = "qtable.csv"
-    lr = 0.1
     gamma = 0.81
 
-    def __init__(self, name, hand=[], explore_fraction=0.75):
+    def __init__(self, name, hand=[], epsilon=0.75, lr=0.1, gamma=0.81):
         ''' extends Player with attributes below which help update qtable
             with rewards. explore_fraction determines how frequently
             a random move is made '''
@@ -20,7 +19,9 @@ class QLearner(Player):
 
         self.qtable = np.loadtxt(self.QTABLE_FILE, delimiter=",")
 
-        self.explore_fraction = explore_fraction
+        self.lr = lr
+        self.gamma = gamma
+        self.epsilon = epsilon
         # update these variables after every single bhabhi_move()
         self.previous_action = 0
         self.previous_state = 0
@@ -150,7 +151,7 @@ class QLearner(Player):
 
         self.previous_card_rank_sum = self.sum_card_ranks()
 
-        if rnd.uniform(0,1) < self.explore_fraction:
+        if rnd.uniform(0,1) < self.epsilon:
             # make random move
             action = rnd.randint(0,1)
             if (action==1): # high card

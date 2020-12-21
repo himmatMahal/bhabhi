@@ -23,9 +23,13 @@ class BhabhiGame:
         self.deal_cards()
         players = deepcopy(self.all_players)
 
+        # shuffling list of players so that their order
+        # in the game rotation is randomized
+        shuffle(players)
+
+        # game info variables:
         garbage = Hand([])
         table_cards = Hand([])
-
         starter = -1
         num_live_players = len(players)
 
@@ -171,6 +175,9 @@ class BhabhiGame:
             player.set_hand( split_decks[i] )
             i+=1
 
+
+# ---------------------------------------------------------------------------
+# Running Games:
 if __name__ == '__main__':
 
     all_players = [ MonkeyCPU('MonkeyCPU'),
@@ -179,7 +186,7 @@ if __name__ == '__main__':
                     QLearnAI('QLearnAI') ]
     loser_count = {}
     game = BhabhiGame( all_players, loser_count )
-    game.run_multiple_games(False, False, 100)
+    game.run_multiple_games(False, False, 1000)
 
     for name in loser_count:
         print(name + " lost " + str(loser_count[name]) + " time(s)")
