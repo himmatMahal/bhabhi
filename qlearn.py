@@ -10,7 +10,7 @@ class QLearner(Player):
     ACTION_COUNT = 2 # 0- play low card...  1- play high card
     QTABLE_FILE = "qtable.csv"
     lr = 0.1
-    gamma = 0.1
+    gamma = 0.81
 
     def __init__(self, name, hand, explore_fraction):
         ''' extends Player with attributes below which help update qtable
@@ -39,7 +39,8 @@ class QLearner(Player):
         possible_future_states = []
         i = self.compute_state(Hand([]))
         for j in range(2):
-            possible_future_states.extend( self.qtable[i+j] )
+            if (i+j < self.STATE_COUNT):
+                possible_future_states.extend( self.qtable[i+j] )
         # updating qtable array
         self.qtable[state, action] = self.qtable[state, action] + self.lr \
                                 * (reward + (self.gamma) \
@@ -73,9 +74,10 @@ class QLearner(Player):
             rank = 1
 
         round = 0
-        if round>15:
+        current_round = self.rounds_played
+        if current_round>15:
             round = 2
-        elif round>7:
+        elif current_round>7:
             round = 1
 
         count = 0

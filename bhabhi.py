@@ -5,6 +5,7 @@ import math
 from cards import Hand, Deck
 from players import HumanPlayer, MonkeyCPU, HumanLikeCPUI, HumanLikeCPUII
 from qlearn import QLearner
+from advanced_players import QLearnAI
 
 ACE_OF_SPADES = ('Spades', 'A', 12)
 
@@ -145,17 +146,26 @@ def main_loop(players, show_every_round, show_cpu_cards):
 
 def main():
     ''' setting up 4 players and player info '''
-    piles = Deck().deal( 4 )
-    p1 = HumanLikeCPUI( '1-HumanLikeCPUI', piles[0] )
-    p2 = HumanLikeCPUII( '2-HumanLikeCPUII', piles[1] )
-    p3 = QLearner( '3-QLearner', piles[2], 0.75 )
-    p4 = MonkeyCPU( '4-MonkeyCPU', piles[3] )
+    num_rounds = int(input("How many rounds would you like to simulate: "))
+    random_move_rate = 0.75
+    bhabhi_count = [0, 0, 0, 0]
 
-    players = [p1, p2, p3, p4]
-    main_loop(players, show_every_round=False, show_cpu_cards=False)
-    for player in [p1, p2, p3, p4]:
-        if isinstance(player, QLearner):
-            player.save_qtable()
+    if num_rounds<=3000:
+        for i in range(num_rounds):
+            piles = Deck().deal( 4 )
+            p1 = HumanLikeCPUI( '1-HumanLikeCPUI', piles[0] )
+            p2 = HumanLikeCPUII( '2-HumanLikeCPUII', piles[1] )
+            p3 = QLearnAI( '3-QLearnAI', piles[2], random_move_rate )
+            p4 = MonkeyCPU( '4-MonkeyCPU', piles[3] )
+
+            players = [p1, p2, p3, p4]
+            main_loop(players, show_every_round=False, show_cpu_cards=False)
+
+            for player in [p1, p2, p3, p4]:
+                if isinstance(player, QLearner):
+                    player.save_qtable()
+    else:
+        print("too many rounds")
 
 if __name__ == '__main__':
     main()
