@@ -1,7 +1,7 @@
 from random import shuffle
 from random import randint
 import math
-from copy import deepcopy
+from copy import copy
 
 from cards import Hand, Deck
 from players import HumanPlayer, MonkeyCPU, HumanLikeCPUI, HumanLikeCPUII
@@ -10,7 +10,7 @@ from advanced_players import QLearnAI
 
 class BhabhiGame:
     ACE_OF_SPADES = ('Spades', 'A', 12)
-    MAX_GAMES = 3000
+    MAX_GAMES = 5000
 
     def __init__(self, all_players, loser_count):
         ''' players: list of players
@@ -21,7 +21,7 @@ class BhabhiGame:
     def run_game(self, show_every_round, show_cpu_cards):
         ''' all complicated game logic occurs here '''
         self.deal_cards()
-        players = deepcopy(self.all_players)
+        players = copy(self.all_players)
 
         # shuffling list of players so that their order
         # in the game rotation is randomized
@@ -168,6 +168,10 @@ class BhabhiGame:
         else:
             print("Mumber of games must be less than " + str(self.MAX_GAMES))
 
+        for player in all_players:
+            if isinstance(player, QLearner):
+                player.save_qtable()
+
     def deal_cards(self):
         split_decks = Deck().deal(len(self.all_players))
         i=0
@@ -180,13 +184,13 @@ class BhabhiGame:
 # Running Games:
 if __name__ == '__main__':
 
-    all_players = [ MonkeyCPU('MonkeyCPU'),
-                    HumanLikeCPUI('HumanLikeCPUI'),
-                    HumanLikeCPUII('HumanLikeCPUII'),
-                    QLearnAI('QLearnAI') ]
+    all_players = [ MonkeyCPU(name='MonkeyCPU'),
+                    HumanLikeCPUI(name='HumanLikeCPUI'),
+                    HumanLikeCPUII(name='HumanLikeCPUII'),
+                    QLearnAI(name='QLearnAI') ]
     loser_count = {}
     game = BhabhiGame( all_players, loser_count )
-    game.run_multiple_games(False, False, 1000)
+    game.run_multiple_games(False, False, 5000)
 
     for name in loser_count:
         print(name + " lost " + str(loser_count[name]) + " time(s)")

@@ -69,16 +69,16 @@ class QLearner(Player):
 
         rank = 0
         sum = self.sum_card_ranks()
-        if sum > 100:
+        if sum > 80:
             rank = 2
-        elif sum > 30:
+        elif sum > 20:
             rank = 1
 
         round = 0
         current_round = self.rounds_played
-        if current_round>15:
+        if current_round>13:
             round = 2
-        elif current_round>7:
+        elif current_round>5:
             round = 1
 
         count = 0
@@ -176,4 +176,5 @@ class QLearner(Player):
     def save_qtable(self):
         ''' after training, call this method to save the qtable file with
             updated value '''
+        ## DEBUG:
         np.savetxt(self.QTABLE_FILE, self.qtable, delimiter=",")
