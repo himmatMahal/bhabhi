@@ -12,7 +12,7 @@ class QLearner(Player):
     lr = 0.1
     gamma = 0.81
 
-    def __init__(self, name, hand, explore_fraction):
+    def __init__(self, name, hand=[], explore_fraction=0.75):
         ''' extends Player with attributes below which help update qtable
             with rewards. explore_fraction determines how frequently
             a random move is made '''

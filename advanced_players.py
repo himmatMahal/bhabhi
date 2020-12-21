@@ -5,6 +5,10 @@ from qlearn import QLearner
 
 class QLearnAI(QLearner):
     ''' fully trained q learning ai '''
+    def __init__(self, name, hand=[]):
+        super().__init__(name, hand)
+        self.qtable = np.loadtxt(self.QTABLE_FILE, delimiter=",")
+
     def bhabhi_move(self, table_cards):
         state = self.compute_state(table_cards)
         turn_case = state % 3

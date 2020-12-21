@@ -4,11 +4,14 @@ from random import randint, shuffle
 
 class Player(ABC):
 
-    def __init__(self, name, hand):
-        ''' Given name, and hand (deck of cards), initializes player '''
+    def __init__(self, name, hand=[]):
+        ''' Given name, and hand (list of card tuples), initializes player '''
         self.hand = Hand(hand)
         self.name = name
         self.rounds_played = 0
+
+    def set_hand(self, hand):
+        self.hand = Hand(hand)
 
     def show_cards(self):
         print(str(self.name))
