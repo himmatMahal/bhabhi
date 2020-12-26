@@ -184,14 +184,14 @@ class BhabhiGame:
 # Running Games:
 if __name__ == '__main__':
 
-    all_players = [ HumanLikeCPUI(name='HumanLikeCPUI'),
+    all_players = [ MonkeyCPU(name='MonkeyCPU'),
+                    HumanLikeCPUI(name='HumanLikeCPUI'),
                     HumanLikeCPUII(name='HumanLikeCPUII'),
-                    MonkeyCPU(name='MonkeyCPU'),
-                    QLearnAI(name='QLearnAI') ]
+                    QLearnAI(name='QLearnAI')]
     loser_count = {}
     game = BhabhiGame( all_players, loser_count )
-    game.run_multiple_games(False, False, 5000)
-    # game.run_game(True, False)
+    game.run_multiple_games(False, False, 4000)
+    # game.run_game(True, True)
 
     for name in loser_count:
         print(name + " lost " + str(loser_count[name]) + " time(s)")

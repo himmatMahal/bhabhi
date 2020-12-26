@@ -1,7 +1,9 @@
 from random import shuffle
+# import pygame
 
 CARD_SUITS = ['Spades', 'Diamonds', 'Clubs', 'Hearts']
 CARD_NUMS = ['2','3','4','5','6','7','8','9','10','J','Q','K','A']
+CARD_PNG_NUMS = ['2','3','4','5','6','7','8','9','10','jack','queen','king','ace']
 
 class Deck:
     ''' Deck
@@ -136,3 +138,42 @@ class Hand:
 
     def top_card_is_diffsuit(self):
         return (not (self.get_bottom_suit() == self.cards[-1][0]))
+
+
+class GUIDeck:
+    ''' same as Deck, with images on each card tuple for GUI '''
+    def __init__(self):
+        import pygame
+
+        self.full_deck = []
+        ''' full_deck is a list of tuples, each tuple represents a card:
+            (suit, rank, value, image) '''
+        for i in range(len(CARD_SUITS)):
+
+            card_val = 0
+            for j in range(len(CARD_NUMS)):
+                file_name = 'card_pics/{}_of_{}.jpg'.format(
+                    CARD_PNG_NUMS[j], CARD_SUITS[i].lower()
+                )
+                img = pygame.image.load(file_name)
+                img = pygame.transform.smoothscale(img,(50,72))
+                self.full_deck.append(
+                    (CARD_SUITS[i], CARD_NUMS[j], card_val, img)
+                )
+                card_val=card_val+1
+
+    def deal(self, player_count):
+        ''' returns list with player_count indices, each index contains
+            a list of cards '''
+        shuffle(self.full_deck)
+        dealt_cards = [ [] for player in range(player_count)]
+        j=0
+        while j<52:
+            if len(self.full_deck) > 0:
+                i = j%player_count
+                dealt_cards[i].append(self.full_deck.pop())
+            j=j+1
+        return dealt_cards
+
+    def __str__(self):
+        return str(self.full_deck)
