@@ -256,11 +256,40 @@ class BhabhiGUI:
                     quit=True
 
 
+
+def get_players():
+    players = [None for x in range(4)]
+    names = ["p1", "p2", "p3", "p4"]
+    for i in range(4):
+        selection = -1
+        while selection not in [1,2,3,4]:
+            print("Select the type for player "+str(i+1))
+            print(" 1 - QLearnAI\n 2 - MonkeyCPU\n 3 - HumanLikeCPUI\n"+
+                  " 4 - HumanLikeCPUII\n")
+            selection = int(input())
+
+        name = ""
+        while len(name) not in list(range(2,30)):
+            print("Type the players name or leave blank (p"+str(i+1)+" default)")
+            name = str(input())
+            if len(name)==0:
+                name = names[i]
+
+        names[i] = name
+
+        if selection==1:
+            players[i] = QLearnAI(name=names[i])
+        elif selection==2:
+            players[i] = MonkeyCPU(name=names[i])
+        elif selection==3:
+            players[i] = HumanLikeCPUI(name=names[i])
+        else:
+            players[i] = HumanLikeCPUII(name=names[i])
+
+    return players
+
 def main():
-    all_players = [ MonkeyCPU(name='MonkeyCPU-1'),
-                    HumanLikeCPUI(name='HumanLikeCPUI'),
-                    HumanLikeCPUII(name='HumanLikeCPUII'),
-                    MonkeyCPU(name='MonkeyCPU-2')]
+    all_players = get_players()
     loser_count = {}
     game = BhabhiGUI( all_players, loser_count )
     game.run_game()
