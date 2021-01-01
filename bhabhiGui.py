@@ -11,16 +11,14 @@ from advanced_players import QLearnAI
 
 class BhabhiGUI:
 
-    MAX_GAMES = 100
     WIDTH = 750
     HEIGHT = 600
-    RATE = 30
 
-    DELAY = 500
+    RATE = 5
+
     BG = (6,87,0)
-
     NORTH = (250, 5)
-    SOUTH = (250, 575)
+    SOUTH = (250, 525)
     EAST = (575, 250)
     WEST = (25, 250)
     CENTER = (200, 275)
@@ -43,7 +41,6 @@ class BhabhiGUI:
         self.deal_cards()
         players = copy(self.all_players)
 
-        shuffle(players)
         garbage = Hand([])
         table_cards = Hand([])
         starter = -1
@@ -51,7 +48,7 @@ class BhabhiGUI:
 
         pygame_on = True
         # main loop for game
-        while pygame_on:
+        while pygame_on and num_live_players>1:
 
             if num_live_players>1:
                 i=0
@@ -92,6 +89,7 @@ class BhabhiGUI:
 
                     i+=1
 
+
             # dump all cards after first round
             garbage.pick_up_cards( table_cards.pop_all_cards() )
 
@@ -122,7 +120,7 @@ class BhabhiGUI:
                         table_cards,
                         self.all_players,
                         players,
-                        next_starting_player
+                        starter
                     )
 
                     # checking game status
@@ -139,13 +137,6 @@ class BhabhiGUI:
                     next_starting_player.pick_up_cards(
                         table_cards.pop_all_cards()
                     )
-                    self.update(
-                        table_cards,
-                        self.all_players,
-                        players,
-                        next_starting_player
-                    )
-
                 else:
                     garbage.pick_up_cards( table_cards.pop_all_cards() )
 
@@ -154,13 +145,6 @@ class BhabhiGUI:
                 if next_starting_player.hand.get_card_count() < 1:
                     garbage.shuffle_cards()
                     next_starting_player.pick_up_card( garbage.pop_card(1) )
-                    self.update(
-                        table_cards,
-                        self.all_players,
-                        players,
-                        next_starting_player
-                    )
-
 
                 # removing winners:
                 next_round_players = []
@@ -180,9 +164,17 @@ class BhabhiGUI:
 
                 self.update(table_cards, self.all_players, players, starter)
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame_on=False
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame_on=False
+
+            bhabhi = players[0].name
+            if bhabhi in self.loser_count:
+                self.loser_count[bhabhi] += 1
+            else:
+                self.loser_count[bhabhi] = 1
+
+        self.display_loser()
 
     def display_table_cards(self, table):
         i=0
@@ -197,7 +189,7 @@ class BhabhiGUI:
         self.screen.fill(self.BG)
         my_font = pygame.font.SysFont('comicsans', 20, bold=True)
 
-        text = [player.name + "\nWON" for player in all_players]
+        text = [player.name + "-WON" for player in all_players]
         for i in range(4):
             for j in range(len(players)):
                 if all_players[i].name == players[j].name:
@@ -221,7 +213,8 @@ class BhabhiGUI:
             i+=1
 
     def update(self, table, all_players, players, starter):
-        pygame.time.delay(self.DELAY)
+        pygame.event.pump()
+        self.clock.tick(self.RATE)
         self.redraw_game_setup(all_players, players)
         self.display_table_cards(table)
 
@@ -244,6 +237,23 @@ class BhabhiGUI:
 
         pygame.display.update()
 
+    def display_loser(self):
+        quit = False
+
+        lost = None
+        for loser in self.loser_count:
+            lost = loser
+
+        while not quit:
+            self.screen.fill(self.BG)
+            my_font = pygame.font.SysFont('comicsans', 35, bold=True)
+            text = my_font.render(f"{lost} is the Bhabhi!", True, (255,255,255))
+            self.screen.blit(text, (self.WIDTH//4, self.HEIGHT//2))
+            pygame.display.update()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    quit=True
 
 
 def main():
@@ -254,6 +264,7 @@ def main():
     loser_count = {}
     game = BhabhiGUI( all_players, loser_count )
     game.run_game()
+
 
 if __name__ == '__main__':
     main()
