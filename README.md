@@ -16,20 +16,6 @@ abstract class:
    filling up the QTable with its respective values over thousands of games
 1. QLearnAI - Fully trained AI
 
-Using the python programs below, you can make any assortment of players above
-play a game, or many series of games.
-
-## Usage:
-#### Multiple games
-```
-python bhabhi.py
-```
-#### GUI display for a single game
-Note: this does not work with HumanPlayer
-```
-python bhabhiGui.py
-```
-
 ## Files
 card_pics/ directory contains all pictures of cards for the GUI
 
