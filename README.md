@@ -48,4 +48,5 @@ algorithm using the QLearner Player.
 After running 5000 games against MonkeyCPUs to test:
 * The AI trained with the QLearning Algorithm won 4339 times (86.8% win rate)
 * The HumanLikeCPU Player with hard-coded instructions won 3470 times (69.4% win rate)
+
 I consider this an overall success
