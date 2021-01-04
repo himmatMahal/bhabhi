@@ -207,7 +207,7 @@ def get_players():
         elif selection==2:
             players[i] = MonkeyCPU(name=names[i])
         elif selection==3:
-            players[i] = HumanLikeCPUI(name=names[i])
+            players[i] = HumanLikeCPU(name=names[i])
         else:
             players[i] = HumanPlayer(name=names[i])
     return players
