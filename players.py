@@ -94,8 +94,8 @@ class MonkeyCPU(Player):
 
         return self.hand.pop_card( selection )
 
-class HumanLikeCPUI(Player):
-    ''' human-like CPU I - Always selects highest possible card '''
+class HumanLikeCPU(Player):
+    ''' human-like CPU - Always selects highest possible card '''
     def bhabhi_move(self, table_cards):
         selection = 0
         if table_cards.get_card_count() > 0:

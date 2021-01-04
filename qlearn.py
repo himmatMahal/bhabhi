@@ -117,7 +117,7 @@ class QLearner(Player):
         if turn_case==0:
             table_suit = table_cards.get_bottom_suit()
             # player has the live suit
-            card_vals = [ card[2] if card[0]==table_suit else -1
+            card_vals = [ card[2] if card[0]==table_suit else 99
                             for card in self.hand.cards ]
             card_selected = self.hand.pop_card(
                 card_vals.index(min(card_vals))+1

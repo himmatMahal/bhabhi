@@ -3,6 +3,8 @@ from random import randint, shuffle
 import numpy as np
 from players import Player
 
+DEBUG = False
+
 class QLearnAI(Player):
     ''' fully trained q learning ai '''
     def __init__(self, name, hand=[]):
@@ -40,7 +42,7 @@ class QLearnAI(Player):
         if turn_case==0:
             table_suit = table_cards.get_bottom_suit()
             # player has the live suit
-            card_vals = [ card[2] if card[0]==table_suit else -1
+            card_vals = [ card[2] if card[0]==table_suit else 99
                             for card in self.hand.cards ]
             card_selected = self.hand.pop_card(
                 card_vals.index(min(card_vals))+1
@@ -111,6 +113,8 @@ class QLearnAI(Player):
     def bhabhi_move(self, table_cards):
         state = self.compute_state(table_cards)
         turn_case = state % 3
+        if DEBUG:
+            print(f'state={state}, turn_case={turn_case}')
         card_returned = None
 
         if (self.qtable[state, 0] > self.qtable[state, 1]):

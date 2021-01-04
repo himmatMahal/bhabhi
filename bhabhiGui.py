@@ -4,7 +4,7 @@ from random import shuffle
 from random import randint
 import math
 from copy import copy
-from players import HumanPlayer, MonkeyCPU, HumanLikeCPUI, HumanLikeCPUII
+from players import HumanPlayer, MonkeyCPU, HumanLikeCPU
 from players import Player
 from advanced_players import QLearnAI
 
@@ -256,16 +256,14 @@ class BhabhiGUI:
                     quit=True
 
 
-
 def get_players():
     players = [None for x in range(4)]
     names = ["p1", "p2", "p3", "p4"]
     for i in range(4):
         selection = -1
-        while selection not in [1,2,3,4]:
+        while selection not in [1,2,3]:
             print("Select the type for player "+str(i+1))
-            print(" 1 - QLearnAI\n 2 - MonkeyCPU\n 3 - HumanLikeCPUI\n"+
-                  " 4 - HumanLikeCPUII\n")
+            print(" 1 - QLearnAI\n 2 - MonkeyCPU\n 3 - HumanLikeCPU\n")
             selection = int(input())
 
         name = ""
@@ -281,10 +279,8 @@ def get_players():
             players[i] = QLearnAI(name=names[i])
         elif selection==2:
             players[i] = MonkeyCPU(name=names[i])
-        elif selection==3:
-            players[i] = HumanLikeCPUI(name=names[i])
         else:
-            players[i] = HumanLikeCPUII(name=names[i])
+            players[i] = HumanLikeCPU(name=names[i])
 
     return players
 
